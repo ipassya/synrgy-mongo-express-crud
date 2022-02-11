@@ -1,0 +1,111 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+#welcome .btn {
+  font-size: 18px;
+}
+
+/* Cards */
+.cards {
+  border-radius: 12px;
+  color: #fff;
+  background-color: #ddd;
+  height: 125px;
+  padding: 1.2rem;
+}
+
+.cards p {
+  font-size: 15px;
+}
+
+.cards h3 {
+  font-weight: 600;
+}
+
+.cards #icon {
+  float: right !important;
+  font-size: 30px;
+  transform: translateY(-100%);
+}
+
+.card-one {
+  background: transparent linear-gradient(112deg, #19e7da 0%, #6078ea 100%) 0%
+    0% no-repeat padding-box;
+  box-shadow: 0px 16px 20px #3eace266;
+}
+
+.card-two {
+  background: transparent linear-gradient(109deg, #55ecb2 0%, #2dd393 100%) 0%
+    0% no-repeat padding-box;
+  box-shadow: 0px 16px 20px #aef2d8;
+}
+
+.card-three {
+  background: transparent linear-gradient(112deg, #fe7379 0%, #f54ea1 100%) 0%
+    0% no-repeat padding-box;
+  box-shadow: 0px 16px 20px #ffb1d2;
+}
+
+.card-four {
+  background: transparent linear-gradient(112deg, #b050d1 0%, #2b26a7 100%) 0%
+    0% no-repeat padding-box;
+  box-shadow: 0px 16px 20px #cfacff;
+}
+
+/* Card-table */
+/* Create Data */
+.tooltip-add-data {
+  position: relative;
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 18px;
+}
+
+.tooltip-add-data .tooltiptext-add-data {
+  visibility: hidden;
+  width: 120px;
+  background: white;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  box-shadow: 0 5px 10px rgba(207, 172, 255, 0.35);
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  transform: translateY(120%);
+  left: -8%;
+}
+
+.tooltip-add-data:hover .tooltiptext-add-data {
+  transition: all 0.5s ease;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Table */
+#tables {
+  width: 0 auto;
+}
+
+.card-table {
+  box-shadow: 0px 16px 20px #cfacff;
+  border-radius: 12px;
+  background: #fff;
+  padding: 20px;
+}
+
+/* Footer */
+#footer {
+  text-align: center;
+  margin-bottom: 0rem;
+}
+
+#footer p {
+  color: gray;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}

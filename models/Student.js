@@ -25,7 +25,7 @@ const studentSchema = new Schema({
   },
   image: {
     type: String,
-    required: true,
+    // required: true,
   },
   adminId: {
     type: String,

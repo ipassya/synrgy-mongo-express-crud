@@ -9,18 +9,9 @@ module.exports = {
   findAll: async (req, res) => {
     let token = await chectAuth.JWTVerify(req.headers);
     if (!token) {
-      res.send(400);
+      res.sendStatus(400);
     } else {
-      const students = await Student.aggregate([
-        {
-          $lookup: {
-            from: "admins",
-            localField: "adminId",
-            foreignField: "email",
-            as: "admin",
-          },
-        },
-      ])
+      const students = await Student.find()
         .then((response) => response)
         .catch((err) => false);
       if (students) {
@@ -34,19 +25,21 @@ module.exports = {
       }
     }
   },
+
   create: async (req, res) => {
     let token = await chectAuth.JWTVerify(req.headers);
     if (!token) {
       res.send(400);
     } else {
-      let studentImage = req.file.image;
+      let studentImage = req.files.image;
       if (!studentImage.mimetype.includes("image")) {
         res.status(400).json({ message: "Invalid file type" });
       } else {
         let newNameImage =
-          randomString(25) + studentImage.mimetype.replace("assets/img/", ".");
+          randomString(25) + studentImage.mimetype.replace("image/", ".");
         let dirName = Path.join(__dirname, "../public/assets/img/");
-        let pathImage = req.get("host") + "/assets/img/" + newNameImage;
+        let pathImage =
+          "http://" + req.get("host") + "/assets/img/" + newNameImage;
 
         studentImage.mv(dirName + newNameImage, async (err) => {
           if (err) {

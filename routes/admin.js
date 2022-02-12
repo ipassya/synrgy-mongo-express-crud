@@ -10,4 +10,7 @@ router.get("/login", adminController.viewLogin);
 // Signup Page
 router.get("/signup", adminController.viewSignup);
 
+// Logout
+router.get("/logout", adminController.logout);
+
 module.exports = router;

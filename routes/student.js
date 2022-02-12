@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const req = require("express/lib/request");
+const res = require("express/lib/response");
 const student = require("../controllers/student.controller");
 
 // API

@@ -36,13 +36,13 @@
               <h2>Welcome, <strong><%= admin %> </strong></h2>
             </div>
           </div>
-          <!-- <div class="col-lg-6 col-6 text-end">
+          <div class="col-lg-6 col-6 text-end">
             <div class="logout">
               <a href="/logout" class="btn"
                 ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
               >
             </div>
-          </div> -->
+          </div>
         </div>
         <!-- End Welcome -->
 
@@ -51,28 +51,40 @@
           <div class="col-lg-3 mb-lg-0 mb-3">
             <div class="cards card-one">
               <p>Total Students</p>
-              <h3>123</h3>
+              <h3><%= students.length %></h3>
               <i class="fa-solid fa-users" id="icon"></i>
             </div>
           </div>
           <div class="col-lg-3 mb-lg-0 mb-3">
             <div class="cards card-two">
               <p>Computer Science</p>
-              <h3>123</h3>
+              <h3>
+                <% const computerScience = students.filter((student) =>
+                student.major == "Computer Science").length %> <%=
+                computerScience %>
+              </h3>
               <i class="fa-solid fa-users" id="icon"></i>
             </div>
           </div>
           <div class="col-lg-3 mb-lg-0 mb-3">
             <div class="cards card-three">
               <p>Information Systems</p>
-              <h3>123</h3>
+              <h3>
+                <% const informationSystems = students.filter((student) =>
+                student.major == "Information Systems").length %> <%=
+                informationSystems %>
+              </h3>
               <i class="fa-solid fa-users" id="icon"></i>
             </div>
           </div>
           <div class="col-lg-3 mb-lg-0 mb-3">
             <div class="cards card-four">
               <p>Computer Network</p>
-              <h3>123</h3>
+              <h3>
+                <% const computerNetwork = students.filter((student) =>
+                student.major == "Computer Network").length %> <%=
+                computerNetwork %>
+              </h3>
               <i class="fa-solid fa-users" id="icon"></i>
             </div>
           </div>
@@ -122,11 +134,18 @@
                       <td><%= student.major %></td>
                       <td><%= student.university %></td>
                       <td>
-                        <a href="#" style="text-decoration: none"
+                        <a
+                          href="#"
+                          style="text-decoration: none"
+                          type="button"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal-show-image"
+                          data-bs-name="<%= student.name %>"
+                          data-bs-image="<%= student.image %>"
                           ><i class="fa-solid fa-eye"></i> image</a
                         >
                       </td>
-                      <td><%= student.admin[index].name %></td>
+                      <td><%= student.adminId %></td>
                       <td>
                         <a
                           href="#confirmDelete"
@@ -197,25 +216,35 @@
             <div id="form-add-data">
               <div class="mb-3">
                 <label for="nim" class="form-label">NIM</label>
-                <input type="text" class="form-control" id="nim" name="nim" />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="add-nim"
+                  name="nim"
+                />
               </div>
               <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="add-name"
+                  name="name"
+                />
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input
                   type="email"
                   class="form-control"
-                  id="email"
+                  id="add-email"
                   name="email"
                   aria-describedby="emailHelp"
                 />
               </div>
               <div class="mb-3">
                 <label for="major" class="form-label">Major</label>
-                <select class="form-control" id="major" name="major">
+                <select class="form-control" id="add-major" name="major">
                   <option>Computer Science</option>
                   <option>Information Systems</option>
                   <option>Computer Network</option>
@@ -226,7 +255,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="university"
+                  id="add-university"
                   name="university"
                 />
               </div>
@@ -235,13 +264,13 @@
                 <input
                   type="file"
                   class="form-control"
-                  id="image"
+                  id="add-image"
                   name="image"
                 />
               </div>
               <input type="hidden" value="<%= admin %>" name="adminId" />
             </div>
-            <!-- Form -->
+            <!-- End Form -->
           </div>
           <div class="modal-footer">
             <button
@@ -251,12 +280,54 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" id="btn-add-data">
+              Save
+            </button>
           </div>
         </div>
       </div>
     </div>
     <!-- End Modal Add Data -->
+
+    <!-- Modal Show Image -->
+    <div
+      class="modal fade"
+      id="modal-show-image"
+      tabindex="-1"
+      aria-labelledby="modal-show-imageLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content p-3 pb-1">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-show-imageLabel">Show Image</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img
+              src=""
+              alt="student-image"
+              class="img-fluid rounded mx-auto d-block py-2"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal Show Image-->
 
     <!-- Bootstrap Bundle with Popper -->
     <script
@@ -270,5 +341,86 @@
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      function getCookie(name) {
+        // Split cookie string and get all individual name=value pairs in an array
+        var cookieArr = document.cookie.split(";");
+
+        // Loop through the array elements
+        for (var i = 0; i < cookieArr.length; i++) {
+          var cookiePair = cookieArr[i].split("=");
+
+          /* Removing whitespace at the beginning of the cookie name
+        and compare it with the given string */
+          if (name == cookiePair[0].trim()) {
+            // Decode the cookie value and return
+            return decodeURIComponent(cookiePair[1]);
+          }
+        }
+
+        // Return null if not found
+        return null;
+      }
+
+      let modalShowImage = document.getElementById("modal-show-image");
+      modalShowImage.addEventListener("show.bs.modal", function (event) {
+        // Button that triggered the modal
+        let button = event.relatedTarget;
+        // Extract info from data-bs-* attributes
+        let studentImage = button.getAttribute("data-bs-image");
+        let studentName = button.getAttribute("data-bs-name");
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        let modalTitle = modalShowImage.querySelector(".modal-title");
+        let showImage = modalShowImage.querySelector(".modal-body img");
+
+        modalTitle.textContent = "Show Image: " + studentName;
+        showImage.src = studentImage;
+        console.log(showImage);
+      });
+
+      document
+        .getElementById("btn-add-data")
+        .addEventListener("click", async (e) => {
+          let image = document.getElementById("add-image").files;
+          let nim = document.getElementById("add-nim").value;
+          let name = document.getElementById("add-name").value;
+          let email = document.getElementById("add-email").value;
+          let major = document.getElementById("add-major").value;
+          let university = document.getElementById("add-university").value;
+          let adminId = "<%= admin %>";
+
+          let formData = new FormData();
+          formData.append("image", image[0]);
+          formData.append("nim", nim);
+          formData.append("name", name);
+          formData.append("email", email);
+          formData.append("major", major);
+          formData.append("university", university);
+          formData.append("adminId", adminId);
+
+          let config = {
+            method: "POST",
+            body: formData,
+            headers: {
+              accept: "application/json",
+              Authorization: `${getCookie("tokenType")} ${getCookie("token")}`,
+            },
+          };
+          await fetch("/api/students/", config)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.statusCode === 200) {
+                alert("Success");
+                window.location.reload();
+              } else {
+                alert("Failed");
+              }
+            });
+        });
+    </script>
   </body>
 </html>

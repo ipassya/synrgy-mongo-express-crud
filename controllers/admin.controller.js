@@ -25,4 +25,11 @@ module.exports = {
   viewLogin: (req, res) => {
     res.render("pages/admin/auth/login");
   },
+  logout: (req, res) => {
+    res.clearCookie("token");
+    res.clearCookie("tokenType");
+    res.clearCookie("username");
+    res.clearCookie("email");
+    res.redirect("/login");
+  },
 };

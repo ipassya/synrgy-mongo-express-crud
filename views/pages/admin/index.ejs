@@ -148,22 +148,29 @@
                       <td><%= student.adminId %></td>
                       <td>
                         <a
-                          href="#confirmDelete"
-                          onclick=""
+                          href="#"
+                          type="button"
                           class="btn btn-danger btn-sm"
-                          data-toggle="modal"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal-delete-student"
+                          data-bs-name="<%= student.name %>"
+                          data-bs-id="<%= student._id %>"
                           ><i class="fa-solid fa-trash-can"></i></a
                         >&nbsp;
                         <a
+                          href="#"
+                          type="button"
                           class="btn btn-warning btn-sm"
-                          href="javascript:;"
-                          data-nim="123180046"
-                          data-name="Ihza Luckyan Passya"
-                          data-email="ipassya@gmail.com"
-                          data-major="Computer Science"
-                          data-university="Oxford University"
-                          data-toggle="modal"
-                          data-target="#edit-data-student"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal-edit-student"
+                          data-bs-id="<%= student._id %>"
+                          data-bs-nim="<%= student.nim %>"
+                          data-bs-name="<%= student.name %>"
+                          data-bs-email="<%= student.email %>"
+                          data-bs-major="<%= student.major %>"
+                          data-bs-university="<%= student.university %>"
+                          data-bs-image="<%= student.image %>"
+                          data-bs-admin-id="<%= student.adminId %>"
                           ><i class="fa-solid fa-pen-to-square"></i
                         ></a>
                       </td>
@@ -329,6 +336,149 @@
     </div>
     <!-- End Modal Show Image-->
 
+    <!-- Modal Delete Data-->
+    <div
+      class="modal fade"
+      id="modal-delete-student"
+      tabindex="-1"
+      aria-labelledby="modal-delete-studentLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-delete-studentLabel">
+              Delete Data
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure to delete the data:</p>
+            <input type="hidden" name="id" id="id-delete" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-danger" id="btn-delete-data">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal Delete Data-->
+
+    <!-- Modal Edit Data -->
+    <div
+      class="modal fade"
+      id="modal-edit-student"
+      tabindex="-1"
+      aria-labelledby="modal-edit-studentLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content p-3 pb-1">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-edit-studentLabel">
+              Edit Data Student
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Form -->
+            <div id="form-edit-data">
+              <div class="mb-3">
+                <label for="nim" class="form-label">NIM</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="edit-nim"
+                  name="nim"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="edit-name"
+                  name="name"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="edit-email"
+                  name="email"
+                  aria-describedby="emailHelp"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="major" class="form-label">Major</label>
+                <select class="form-control" id="edit-major" name="major">
+                  <option>Computer Science</option>
+                  <option>Information Systems</option>
+                  <option>Computer Network</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="university" class="form-label">University</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="edit-university"
+                  name="university"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="edit-image"
+                  name="image"
+                />
+              </div>
+              <input type="hidden" name="id" id="edit-id" />
+              <input type="hidden" name="image-old" id="edit-image-old" />
+              <input type="hidden" name="admin-id" id="edit-admin-id" />
+            </div>
+            <!-- End Form -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-edit-data">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal Edit Data -->
+
     <!-- Bootstrap Bundle with Popper -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -379,7 +529,75 @@
 
         modalTitle.textContent = "Show Image: " + studentName;
         showImage.src = studentImage;
-        console.log(showImage);
+      });
+
+      let modalDeleteStudent = document.getElementById("modal-delete-student");
+      modalDeleteStudent.addEventListener("show.bs.modal", function (event) {
+        // Button that triggered the modal
+        let button = event.relatedTarget;
+        // Extract info from data-bs-* attributes
+        let studentId = button.getAttribute("data-bs-id");
+        let studentName = button.getAttribute("data-bs-name");
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        let modalBody = modalDeleteStudent.querySelector(".modal-body p");
+        let idDelete = modalDeleteStudent.querySelector(
+          ".modal-body #id-delete"
+        );
+
+        modalBody.textContent =
+          "Are you sure to delete the data: " + studentName + " ?";
+        idDelete.value = studentId;
+      });
+
+      let modalEditStudent = document.getElementById("modal-edit-student");
+      modalEditStudent.addEventListener("show.bs.modal", function (event) {
+        // Button that triggered the modal
+        let button = event.relatedTarget;
+        // Extract info from data-bs-* attributes
+        let studentId = button.getAttribute("data-bs-id");
+        let studentNim = button.getAttribute("data-bs-nim");
+        let studentName = button.getAttribute("data-bs-name");
+        let studentEmail = button.getAttribute("data-bs-email");
+        let studentMajor = button.getAttribute("data-bs-major");
+        let studentUniversity = button.getAttribute("data-bs-university");
+        let studentImage = button.getAttribute("data-bs-image");
+        let studentAdminId = button.getAttribute("data-bs-admin-id");
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        let inputId = modalEditStudent.querySelector(".modal-body #edit-id");
+        let inputNim = modalEditStudent.querySelector(".modal-body #edit-nim");
+        let inputName = modalEditStudent.querySelector(
+          ".modal-body #edit-name"
+        );
+        let inputEmail = modalEditStudent.querySelector(
+          ".modal-body #edit-email"
+        );
+        let inputMajor = modalEditStudent.querySelector(
+          ".modal-body #edit-major"
+        );
+        let inputUniversity = modalEditStudent.querySelector(
+          ".modal-body #edit-university"
+        );
+        let inputImageOld = modalEditStudent.querySelector(
+          ".modal-body #edit-image-old"
+        );
+        let inputAdminId = modalEditStudent.querySelector(
+          ".modal-body #edit-admin-id"
+        );
+
+        inputId.value = studentId;
+        inputNim.value = studentNim;
+        inputName.value = studentName;
+        inputEmail.value = studentEmail;
+        inputMajor.value = studentMajor;
+        inputUniversity.value = studentUniversity;
+        inputImageOld.value = studentImage;
+        inputAdminId.value = studentAdminId;
       });
 
       document
@@ -411,6 +629,75 @@
             },
           };
           await fetch("/api/students/", config)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.statusCode === 200) {
+                alert("Success");
+                window.location.reload();
+              } else {
+                alert("Failed");
+              }
+            });
+        });
+
+      document
+        .getElementById("btn-delete-data")
+        .addEventListener("click", async (e) => {
+          const id = document.getElementById("id-delete").value;
+
+          let config = {
+            method: "DELETE",
+            headers: {
+              accept: "application/json",
+              Authorization: `${getCookie("tokenType")} ${getCookie("token")}`,
+            },
+          };
+          let url = `/api/students/${id}`;
+          await fetch(url, config)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.statusCode === 200) {
+                alert("Success");
+                window.location.reload();
+              } else {
+                alert("Failed");
+              }
+            });
+        });
+
+      document
+        .getElementById("btn-edit-data")
+        .addEventListener("click", async (e) => {
+          const id = document.getElementById("edit-id").value;
+          const nim = document.getElementById("edit-nim").value;
+          const name = document.getElementById("edit-name").value;
+          const email = document.getElementById("edit-email").value;
+          const major = document.getElementById("edit-major").value;
+          const university = document.getElementById("edit-university").value;
+          const imageOld = document.getElementById("edit-image-old").value;
+          const adminId = document.getElementById("edit-admin-id").value;
+          let image = document.getElementById("edit-image").files;
+
+          let formData = new FormData();
+          formData.append("image", image[0]);
+          formData.append("nim", nim);
+          formData.append("name", name);
+          formData.append("email", email);
+          formData.append("major", major);
+          formData.append("university", university);
+          formData.append("imageOld", imageOld);
+          formData.append("adminId", adminId);
+
+          let config = {
+            method: "PUT",
+            body: formData,
+            headers: {
+              accept: "application/json",
+              Authorization: `${getCookie("tokenType")} ${getCookie("token")}`,
+            },
+          };
+          let url = `/api/students/${id}`;
+          await fetch(url, config)
             .then((res) => res.json())
             .then((data) => {
               if (data.statusCode === 200) {

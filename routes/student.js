@@ -6,5 +6,7 @@ const student = require("../controllers/student.controller");
 // API
 router.get("/api/students/", student.findAll);
 router.post("/api/students/", student.create);
+router.delete("/api/students/:id", student.delete);
+router.put("/api/students/:id", student.update);
 
 module.exports = router;

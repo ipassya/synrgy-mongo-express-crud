@@ -5,41 +5,61 @@ const cryptr = new Cryptr(process.env.SecretKey);
 
 module.exports = {
   signup: async (req, res) => {
-    if (!req.body) {
-      res.sendStatus(400);
-    }
-
-    let dataFind = await Admin.findOne({
-      username: req.body.username,
-      email: req.body.email,
-    })
-      .then((response) => false)
-      .catch((err) => true);
-
-    if (dataFind) {
+    if (
+      !req.body ||
+      req.body.name == "" ||
+      req.body.username == "" ||
+      req.body.email == "" ||
+      req.body.password == ""
+    ) {
       res.send({
-        message: "Username and Email already exists",
-        statusCode: 500,
+        message: "Please fill all the fields",
+        statusCode: 402,
       });
     } else {
-      const newAdmin = new Admin({
-        name: req.body.name,
-        username: req.body.username,
-        email: req.body.email,
-        password: cryptr.encrypt(req.body.password),
-      });
-      let createData = await newAdmin.save(newAdmin);
-      if (createData) {
-        res.send({
-          message: "Success",
-          statusCode: 200,
+      await Admin.findOne({
+        $or: [
+          {
+            username: req.body.username,
+          },
+          {
+            email: req.body.email,
+          },
+        ],
+      })
+        .then(async (response) => {
+          if (response == null) {
+            const newAdmin = new Admin({
+              name: req.body.name,
+              username: req.body.username,
+              email: req.body.email,
+              password: cryptr.encrypt(req.body.password),
+            });
+            let createData = await newAdmin.save(newAdmin);
+            if (createData) {
+              res.send({
+                message: "Successfully added admin",
+                statusCode: 200,
+              });
+            } else {
+              res.send({
+                message: "Failed to add admin",
+                statusCode: 500,
+              });
+            }
+          } else {
+            res.send({
+              message: "Username or Email already exists",
+              statusCode: 502,
+            });
+          }
+        })
+        .catch((err) => {
+          res.send({
+            message: "Failed to add admin",
+            statusCode: 500,
+          });
         });
-      } else {
-        res.send({
-          message: "Failed",
-          statusCode: 500,
-        });
-      }
     }
   },
   login: async (req, res) => {
@@ -72,14 +92,14 @@ module.exports = {
           token: token,
         };
         res.send({
-          message: "Success",
+          message: "Login successfully",
           statusCode: 200,
           results: dataParsing,
         });
       } else {
         res.send({
           message: "Wrong username or password",
-          statusCode: 500,
+          statusCode: 502,
         });
       }
     }

@@ -57,7 +57,7 @@
         <button
           type="submit"
           class="btn btn-custom mt-2"
-          onclick="submitData()"
+          onclick="signupButton()"
         >
           SignUp
         </button>
@@ -68,13 +68,18 @@
       </p>
     </div>
 
+    <!-- Sweetalert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-      function submitData() {
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      async function signupButton() {
         let name = document.getElementById("name").value;
         let username = document.getElementById("username").value;
         let email = document.getElementById("email").value;
         let password = document.getElementById("password").value;
-        console.log(name, username, email, password);
 
         let settingPost = {
           method: "POST",
@@ -89,14 +94,38 @@
           }),
         };
         let url = "http://localhost:3000/api/auth/signup";
-        fetch(url, settingPost)
+        await fetch(url, settingPost)
           .then((response) => response.json())
           .then((data) => {
             if (data.statusCode === 200) {
-              alert("Signup Success");
-              window.location.href = "/login";
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Signup Succes :)",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+              sleep(1000).then(() => {
+                window.location.href = "/login";
+              });
+            } else if (data.statusCode === 502) {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Username or Email already exists!",
+              });
+            } else if (data.statusCode === 402) {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Please fill all the fields!",
+              });
             } else {
-              alert("Signup Failed");
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Signup Failed :(",
+              });
             }
           });
       }

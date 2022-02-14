@@ -27,9 +27,13 @@ const studentSchema = new Schema({
     type: String,
     // required: true,
   },
-  adminId: {
+  createAdminId: {
     type: String,
     required: true,
+  },
+  updateAdminId: {
+    type: String,
+    // required: true,
   },
 });
 

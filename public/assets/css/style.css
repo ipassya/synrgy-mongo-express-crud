@@ -58,8 +58,10 @@
 .tooltip-add-data {
   position: relative;
   display: inline-block;
-  margin-right: 6px;
-  margin-bottom: 18px;
+  /* margin-right: 6px; */
+  /* margin-bottom: 18px; */
+  /* position: absolute; */
+  /* bottom: -10px; */
 }
 
 .tooltip-add-data .tooltiptext-add-data {

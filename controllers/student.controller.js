@@ -1,5 +1,4 @@
 const Student = require("../models/Student");
-const Admin = require("../models/Admin");
 const chectAuth = require("../middlewares/checkAuth.middleware");
 const Path = require("path");
 const randomString =
@@ -9,7 +8,10 @@ module.exports = {
   findAll: async (req, res) => {
     let token = await chectAuth.JWTVerify(req.headers);
     if (!token) {
-      res.sendStatus(400);
+      res.send({
+        statusCode: 401,
+        message: "Token is invalid",
+      });
     } else {
       const students = await Student.find()
         .then((response) => response)
@@ -21,7 +23,10 @@ module.exports = {
           results: students,
         });
       } else {
-        res.status(404).json({ message: "Students not found" });
+        res.send({
+          message: "Failed to get all students",
+          statusCode: 500,
+        });
       }
     }
   },
@@ -29,53 +34,71 @@ module.exports = {
   create: async (req, res) => {
     let token = await chectAuth.JWTVerify(req.headers);
     if (!token) {
-      res.send(400);
+      res.send({
+        statusCode: 401,
+        message: "Token is invalid",
+      });
+    } else if (!req.body || !req.files) {
+      res.send({
+        statusCode: 402,
+        message: "Please fill all the fields",
+      });
+    } else if (!req.files.image.mimetype.includes("image")) {
+      res.send({
+        message: "Invalid image type",
+        statusCode: 415,
+      });
     } else {
       let studentImage = req.files.image;
-      if (!studentImage.mimetype.includes("image")) {
-        res.status(400).json({ message: "Invalid file type" });
-      } else {
-        let newNameImage =
-          randomString(25) + studentImage.mimetype.replace("image/", ".");
-        let dirName = Path.join(__dirname, "../public/assets/img/");
-        let pathImage =
-          "http://" + req.get("host") + "/assets/img/" + newNameImage;
+      let newNameImage =
+        randomString(25) + studentImage.mimetype.replace("image/", ".");
+      let dirName = Path.join(__dirname, "../public/assets/img/");
+      let pathImage =
+        "http://" + req.get("host") + "/assets/img/" + newNameImage;
 
-        studentImage.mv(dirName + newNameImage, async (err) => {
-          if (err) {
-            res.status(500).json({ message: "Error uploading file" });
-          } else {
-            const newStudent = new Student({
-              nim: req.body.nim,
-              name: req.body.name,
-              email: req.body.email,
-              major: req.body.major,
-              university: req.body.university,
-              image: pathImage,
-              adminId: req.body.adminId,
-            });
-            await newStudent
-              .save(newStudent)
-              .then((response) => {
-                res.send({
-                  message: "Successfully create new student",
-                  statusCode: 200,
-                  results: response,
-                });
-              })
-              .catch((err) => {
-                res.status(500).json({ message: "Error creating student" });
+      studentImage.mv(dirName + newNameImage, async (err) => {
+        if (err) {
+          res.send({
+            message: "Failed to upload image",
+            statusCode: 500,
+          });
+        } else {
+          const newStudent = new Student({
+            nim: req.body.nim,
+            name: req.body.name,
+            email: req.body.email,
+            major: req.body.major,
+            university: req.body.university,
+            image: pathImage,
+            createAdminId: req.body.createAdminId,
+          });
+          await newStudent
+            .save(newStudent)
+            .then((response) => {
+              res.send({
+                message: "Successfully added student",
+                statusCode: 200,
+                results: response,
               });
-          }
-        });
-      }
+            })
+            .catch((err) => {
+              res.send({
+                message: "Failed to add student",
+                statusCode: 500,
+              });
+            });
+        }
+      });
     }
   },
 
   delete: async (req, res) => {
     let token = await chectAuth.JWTVerify(req.headers);
     if (!token) {
-      res.send(400);
+      res.send({
+        statusCode: 401,
+        message: "Token is invalid",
+      });
     } else {
       const student = await Student.findById(req.params.id)
         .then((response) => response)
@@ -84,16 +107,22 @@ module.exports = {
         await Student.findByIdAndDelete(req.params.id)
           .then((response) => {
             res.send({
-              message: "Successfully delete student",
+              message: "Successfully deleted student",
               statusCode: 200,
               results: response,
             });
           })
           .catch((err) => {
-            res.status(500).json({ message: "Error deleting student" });
+            res.send({
+              message: "Failed to delete student",
+              statusCode: 500,
+            });
           });
       } else {
-        res.status(404).json({ message: "Student not found" });
+        res.send({
+          message: "Data not found",
+          statusCode: 500,
+        });
       }
     }
   },
@@ -101,7 +130,10 @@ module.exports = {
   update: async (req, res) => {
     let token = await chectAuth.JWTVerify(req.headers);
     if (!token) {
-      res.send(400);
+      res.send({
+        statusCode: 401,
+        message: "Token is invalid",
+      });
     } else {
       const student = await Student.findById(req.params.id)
         .then((response) => response)
@@ -117,7 +149,10 @@ module.exports = {
 
           studentImage.mv(dirName + newNameImage, async (err) => {
             if (err) {
-              res.status(500).json({ message: "Error uploading file" });
+              res.send({
+                message: "Failed to upload image",
+                statusCode: 500,
+              });
             } else {
               await Student.findByIdAndUpdate(req.params.id, {
                 nim: req.body.nim,
@@ -126,7 +161,7 @@ module.exports = {
                 major: req.body.major,
                 university: req.body.university,
                 image: pathImage,
-                adminId: req.body.adminId,
+                updateAdminId: req.body.updateAdminId,
               })
                 .then((response) => {
                   res.send({
@@ -136,7 +171,10 @@ module.exports = {
                   });
                 })
                 .catch((err) => {
-                  res.status(500).json({ message: "Error updating student" });
+                  res.send({
+                    message: "Failed to update student",
+                    statusCode: 500,
+                  });
                 });
             }
           });
@@ -147,7 +185,7 @@ module.exports = {
             email: req.body.email,
             major: req.body.major,
             university: req.body.university,
-            adminId: req.body.adminId,
+            updateAdminId: req.body.updateAdminId,
           })
             .then((response) => {
               res.send({
@@ -157,13 +195,22 @@ module.exports = {
               });
             })
             .catch((err) => {
-              res.status(500).json({ message: "Error updating student" });
+              res.send({
+                message: "Failed to update student",
+                statusCode: 500,
+              });
             });
         } else {
-          res.status(400).json({ message: "Invalid file type" });
+          res.send({
+            message: "Invalid image type",
+            statusCode: 415,
+          });
         }
       } else {
-        res.status(404).json({ message: "Student not found" });
+        res.send({
+          message: "Data not found",
+          statusCode: 500,
+        });
       }
     }
   },

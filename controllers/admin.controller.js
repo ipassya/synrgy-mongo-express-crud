@@ -1,4 +1,3 @@
-const Admin = require("../models/Admin");
 const Axios = require("axios");
 
 module.exports = {
@@ -10,10 +9,15 @@ module.exports = {
       headers: { Authorization: `${tokenType} ${token}` },
     })
       .then((response) => {
-        res.render("pages/admin/index", {
-          students: response.data.results,
-          admin: adminLogin,
-        });
+        console.log(response.data);
+        if (response.data.statusCode == 200) {
+          res.render("pages/admin/index", {
+            students: response.data.results,
+            admin: adminLogin,
+          });
+        } else {
+          res.redirect("/login");
+        }
       })
       .catch((err) => {
         res.redirect("/login");

@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
-const port = 3000;
+const port = process.env.PORT || 3000;
 dotenv.config({ path: "./config/config.env" });
 
 app.set("view engine", "ejs"); // Template Engine ejs

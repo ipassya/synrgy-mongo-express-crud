@@ -9,7 +9,6 @@ module.exports = {
       headers: { Authorization: `${tokenType} ${token}` },
     })
       .then((response) => {
-        console.log(response.data);
         if (response.data.statusCode == 200) {
           res.render("pages/admin/index", {
             students: response.data.results,

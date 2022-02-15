@@ -5,7 +5,7 @@ module.exports = {
     const adminLogin = req.cookies.username;
     const token = req.cookies.token;
     const tokenType = req.cookies.tokenType;
-    await Axios.get("http://localhost:3000/api/students/", {
+    await Axios.get("/api/students/", {
       headers: { Authorization: `${tokenType} ${token}` },
     })
       .then((response) => {

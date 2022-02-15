@@ -93,7 +93,7 @@
             password: password,
           }),
         };
-        let url = "http://localhost:3000/api/auth/signup";
+        let url = "/api/auth/signup";
         await fetch(url, settingPost)
           .then((response) => response.json())
           .then((data) => {

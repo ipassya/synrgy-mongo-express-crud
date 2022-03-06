@@ -5,7 +5,7 @@ module.exports = {
     const adminLogin = req.cookies.username;
     const token = req.cookies.token;
     const tokenType = req.cookies.tokenType;
-    await Axios.get("/api/students/", {
+    await Axios.get("https://crud-synrgy.herokuapp.com/api/students/", {
       headers: { Authorization: `${tokenType} ${token}` },
     })
       .then((response) => {
